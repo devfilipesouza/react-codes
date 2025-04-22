@@ -1,0 +1,60 @@
+import React, {useState, useEffect} from 'react';
+import {View, Text, Dimensions, StyleSheet} from 'react-native';
+
+const App = () => {
+  const [orientation, setOrientation] = useState('portrait');
+  const {width, height} = Dimensions.get('window');
+
+  useEffect(() => {
+    const updateOrientation = () => {
+      const {width, height} = Dimensions.get('window');
+      setOrientation(width > height ? 'landscape' : 'portrait');
+    };
+
+    Dimensions.addEventListener('change', updateOrientation);
+    return () => Dimensions.removeEventListener('change', updateOrientation);
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>
+        {orientation === 'portrait'
+          ? 'Modo Retrato'
+          : 'Modo Paisagem'}
+      </Text>
+      <View
+        style={[
+          styles.box,
+          orientation === 'portrait'
+            ? styles.portraitBox
+            : styles.landscapeBox,
+        ]}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  box: {
+    backgroundColor: 'green',
+  },
+  portraitBox: {
+    width: '80%',
+    height: '30%',
+  },
+  landscapeBox: {
+    width: '50%',
+    height: '60%',
+  },
+});
+
+export default App;
